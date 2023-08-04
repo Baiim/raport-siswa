@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Siswa;
+use App\Models\Score;
+use App\Models\User;
+use App\Models\Kelas;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Auth; // Import the Auth facade
+use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Session;
+
+class SiswaController extends Controller
+{
+    public function index(Request $request)
+    {
+        $siswa = Siswa::with('kelas')->get();
+        if ($request->ajax()) {
+            return Datatables::of($siswa)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    // $editUrl = route('transaksi.generate-pdf', $row->id);
+                    // $deleteUrl = route('transaksi.destroy', $row->id);
+                    $editUrl = '';
+                    $deleteUrl = '';
+                    $btn = '<div class="btn-group" role="group">';
+                    $btn .= '<a href="' . $editUrl . '" class="btn btn-primary btn-block btn-user generate-pdf" data-url="' . $editUrl . '"><i class="fas fa-edit"></i></a>';
+                    $btn .= '<form class="form-delete" action="' . $deleteUrl . '" method="POST" style="display:inline">
+                        ' . method_field('delete') . csrf_field() . '
+                        <button type="submit" class="btn btn-danger btn-user btn-block btn-delete"><i class="fas fa-trash-alt"></i></button>
+                    </form>';
+                    $btn .= '</div>';
+    
+                    return $btn;
+                })
+                ->addColumn('kelas_id', function ($transaction) {
+                    return $transaction->kelas->namaKelas;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    
+        return view('pages.admin.master.siswa.index');
+    }
+    public function create(){
+        $kelas = Kelas::all();
+        return view('pages.admin.master.siswa.create', compact('kelas'));
+    }
+    public function store(Request $request)
+    {
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('photos', 'public');
+        }
+
+        // Buat user terlebih dahulu
+        $user = User::create([
+            'name' => $request->input('nama'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+            'level' => 2, // Set level ke 1
+        ]);
+
+        // Buat data siswa dengan menghubungkannya ke user yang telah dibuat
+        $siswa = Siswa::create([
+            'nama' => $request->input('nama'),
+            'jenisKelamin' => $request->input('jenisKelamin'),
+            'tanggalLahir' => $request->input('tanggalLahir'),
+            'phone' => $request->input('phone'),
+            'nis' => $request->input('nis'),
+            'email' => $request->input('email'),
+            'alamat' => $request->input('alamat'),
+            'orangTua' => $request->input('orangTua'),
+            'kelas_id' => $request->input('kelas_id'),
+            'photo' => $photoPath,
+            'user_id' => $user->id,
+        ]);
+
+        Session::flash('success', 'Data guru dan pengguna berhasil ditambahkan.'); 
+        // Redirect to a specific route after successful creation
+        return redirect()->route('siswa');
+    }
+    public function nilai(Request $request)
+    {
+        $user = Auth::user(); // Get the authenticated user (siswa)
+        $siswa = $user->siswa; // Assuming the user has a relationship with Siswa model
+    
+        if (!$siswa) {
+            abort(403, "You are not authorized to access this page.");
+        }
+    
+        // Retrieve the scores for the student and specific class
+        $scores = Score::where('siswa_id', $user->siswa->id)->get();
+    
+        return view('pages.admin.master.siswa.nilai', compact('siswa', 'scores'));
+    }
+    
+}
