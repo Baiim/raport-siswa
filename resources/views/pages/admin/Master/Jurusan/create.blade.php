@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-    SMK | Create Data Mata Pelajaran
+    SMK | Create Data Jurusan
 @endsection
 @section('content')
     <section class="content">
@@ -12,28 +12,22 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Tambah Data Mata Pelajaran</h3>
+                            <h3 class="card-title">Tambah Data Jurusan</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="{{ route('mapel.store') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('jurusan.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
-                                <label for="">Kode Mata Pelajaran</label>
-                                <select name="code" class="form-control select2" style="width: 100%;">
-                                    @foreach ($jurusan as $item)
-                                        <option value="{{ $item->kode }}">{{ $item->kode }}</option>
-                                    @endforeach
-                                </select>
                                 <div class="form-group">
-                                    <label>KKM Mata Pelajaran</label>
-                                    <input type="number" name="kkm" class="form-control" id="exampleInputPassword1"
-                                        placeholder="Mata Pelajaran" value="70" required>
+                                    <label>Kode Jurusan</label>
+                                    <input type="text" name="kode" class="form-control" id="exampleInputPassword1"
+                                        placeholder="Nama Kelas" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Mata Pelajaran</label>
-                                    <input type="text" name="mataPelajaran" class="form-control"
-                                        id="exampleInputPassword1" placeholder="Mata Pelajaran" required>
+                                    <label>Nama Jurusan</label>
+                                    <input type="text" name="namaJurusan" class="form-control" id="exampleInputPassword1"
+                                        placeholder="Nama Kelas" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">Simpan</button>
                             </div>

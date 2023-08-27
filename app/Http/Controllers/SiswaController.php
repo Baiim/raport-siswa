@@ -7,10 +7,13 @@ use App\Models\Siswa;
 use App\Models\Score;
 use App\Models\User;
 use App\Models\Kelas;
+use App\Models\Jurusan;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth; // Import the Auth facade
 use Illuminate\Support\Facades\Hash; 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class SiswaController extends Controller
 {
@@ -21,10 +24,9 @@ class SiswaController extends Controller
             return Datatables::of($siswa)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    // $editUrl = route('transaksi.generate-pdf', $row->id);
-                    // $deleteUrl = route('transaksi.destroy', $row->id);
-                    $editUrl = '';
-                    $deleteUrl = '';
+                    $editUrl = route('siswa.destroy', $row->id); // Ganti dengan URL edit yang sesuai
+                    $deleteUrl = route('siswa.destroy', $row->id);
+                    
                     $btn = '<div class="btn-group" role="group">';
                     $btn .= '<a href="' . $editUrl . '" class="btn btn-primary btn-block btn-user generate-pdf" data-url="' . $editUrl . '"><i class="fas fa-edit"></i></a>';
                     $btn .= '<form class="form-delete" action="' . $deleteUrl . '" method="POST" style="display:inline">
@@ -46,40 +48,50 @@ class SiswaController extends Controller
     }
     public function create(){
         $kelas = Kelas::all();
-        return view('pages.admin.master.siswa.create', compact('kelas'));
+        $jurusan = Jurusan::all();
+        return view('pages.admin.master.siswa.create', compact('kelas','jurusan'));
     }
     public function store(Request $request)
     {
-        if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('photos', 'public');
+        DB::beginTransaction(); // Memulai transaksi
+    
+        try {
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('photos', 'public');
+            }
+    
+            $user = User::create([
+                'name' => $request->input('nama'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->input('password')),
+                'level' => 2,
+            ]);
+    
+            $siswa = Siswa::create([
+                'nama' => $request->input('nama'),
+                'jenisKelamin' => $request->input('jenisKelamin'),
+                'tanggalLahir' => $request->input('tanggalLahir'),
+                'phone' => $request->input('phone'),
+                'nis' => $request->input('nis'),
+                'email' => $request->input('email'),
+                'alamat' => $request->input('alamat'),
+                'orangTua' => $request->input('orangTua'),
+                'kelas_id' => $request->input('kelas_id'),
+                'jurusan' => $request->input('jurusan'),
+                'photo' => $photoPath,
+                'user_id' => $user->id,
+            ]);
+    
+            DB::commit(); // Menyimpan perubahan ke database
+    
+            Session::flash('success', 'Data guru dan pengguna berhasil ditambahkan.'); 
+            return redirect()->route('siswa');
+        } catch (\Exception $e) {
+            DB::rollback(); // Membatalkan transaksi jika terjadi kesalahan
+    
+            Session::flash('error', 'Terjadi kesalahan saat menambahkan data siswa.');
+            return redirect()->back();
         }
-
-        // Buat user terlebih dahulu
-        $user = User::create([
-            'name' => $request->input('nama'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'level' => 2, // Set level ke 1
-        ]);
-
-        // Buat data siswa dengan menghubungkannya ke user yang telah dibuat
-        $siswa = Siswa::create([
-            'nama' => $request->input('nama'),
-            'jenisKelamin' => $request->input('jenisKelamin'),
-            'tanggalLahir' => $request->input('tanggalLahir'),
-            'phone' => $request->input('phone'),
-            'nis' => $request->input('nis'),
-            'email' => $request->input('email'),
-            'alamat' => $request->input('alamat'),
-            'orangTua' => $request->input('orangTua'),
-            'kelas_id' => $request->input('kelas_id'),
-            'photo' => $photoPath,
-            'user_id' => $user->id,
-        ]);
-
-        Session::flash('success', 'Data guru dan pengguna berhasil ditambahkan.'); 
-        // Redirect to a specific route after successful creation
-        return redirect()->route('siswa');
     }
     public function nilai(Request $request)
     {
@@ -95,5 +107,27 @@ class SiswaController extends Controller
     
         return view('pages.admin.master.siswa.nilai', compact('siswa', 'scores'));
     }
+    
+    public function destroy($id)
+{
+   $siswa = Siswa::findOrFail($id);
+
+    // Hapus foto jika ada
+    if ($siswa->photo) {
+        Storage::disk('public')->delete($siswa->photo);
+    }
+
+    // Hapus user terkait
+    if ($siswa->user) {
+       $siswa->user->delete();
+    }
+
+   $siswa->delete();
+
+    Session::flash('success', 'Data guru dan pengguna berhasil dihapus.');
+
+    // Redirect to a specific route after successful deletion
+    return redirect()->route('siswa');
+}
     
 }

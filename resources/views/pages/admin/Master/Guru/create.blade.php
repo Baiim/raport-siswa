@@ -56,7 +56,7 @@
                                 <div class="form-group">
                                     <label>Tanggal Lahir</label>
                                     <input type="date" required name="tanggalLahir" class="form-control"
-                                        id="exampleInputPassword1" placeholder="Tanggal Lahir">
+                                        id="exampleInputPassword1" placeholder="Tanggal Lahir" value="2000-01-01">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Jenis Kelamin</label>
@@ -79,7 +79,7 @@
                                 <div class="form-group">
                                     <label>Alamat</label>
                                     <input type="text" name="alamat" class="form-control" id="exampleInputPassword1"
-                                        placeholder="Alamat" required>
+                                        placeholder="Alamat" value="Bekasi" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Photo</label>

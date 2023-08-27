@@ -23,6 +23,9 @@
                                     <p><strong>NIS:</strong> {{ $siswa->nis }}</p>
                                 </div>
                                 <div class="col">
+                                    <p><strong>Jurusan:</strong> {{ $siswa->jurusan }}</p>
+                                </div>
+                                <div class="col">
                                     <p><strong>Kelas:</strong> {{ $siswa->kelas->namaKelas }}</p>
                                 </div>
                             </div>
@@ -44,8 +47,12 @@
                             <div class="card-body">
                                 @foreach ($mapels as $mapel)
                                     @php
+                                        $allowedJurusan = ['STK-AK', 'STK-MM', 'STK-TKR', 'STK-TKJ'];
+                                    @endphp
+                                    @php
                                         $score = $scores->where('mapel_id', $mapel->id)->first();
                                     @endphp
+                                    @if (in_array($siswa->jurusan, $allowedJurusan) && $siswa->jurusan == $mapel->code)
                                     <div class="row mb-3">
                                         <div class="col">
                                             <label for="">{{ $mapel->mataPelajaran }}</label>
@@ -65,6 +72,7 @@
                                                 class="form-control" value="{{ $score->uts }}">
                                         </div>
                                     </div>
+                                    @endif
                                 @endforeach
                                 <button type="submit" class="btn btn-primary btn-user btn-block">Update</button>
                             </div>

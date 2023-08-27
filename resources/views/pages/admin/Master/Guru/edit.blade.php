@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-    SMK | Create Data Siswa
+    SMK | Edit Data Guru
 @endsection
 @section('content')
     @push('addon-style')
@@ -21,27 +21,22 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Tambah Data Siswa</h3>
+                            <h3 class="card-title">Ubah Data Guru</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        @if(session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-                        <form action="{{ route('siswa.store') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('guru.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Nama Siswa</label>
+                                    <label>Nama Guru</label>
                                     <input type="text" name="nama" class="form-control" id="exampleInputPassword1"
-                                        placeholder="Nama Siswa" required>
+                                        placeholder="Nama Guru" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>NISN</label>
-                                    <input type="number" required name="nis" class="form-control"
-                                        id="exampleInputPassword1" placeholder="NIS">
+                                    <label>NIP</label>
+                                    <input type="number" required name="nip" class="form-control"
+                                        id="exampleInputPassword1" placeholder="NIP">
                                 </div>
                                 <div class="form-group">
                                     <label>Email address</label>
@@ -51,33 +46,17 @@
                                 <div class="form-group">
                                     <label>Nomor Telepon</label>
                                     <input type="number" name="phone" class="form-control" id="exampleInputPassword1"
-                                        placeholder="Nomor Telepon" value="08123456789" required>
+                                        placeholder="Nomor Telepon" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Password</label>
                                     <input type="password" required name="password" class="form-control"
-                                        id="exampleInputPassword1" value="siswa123" placeholder="Password">
+                                        id="exampleInputPassword1" placeholder="Password">
                                 </div>
                                 <div class="form-group">
                                     <label>Tanggal Lahir</label>
                                     <input type="date" required name="tanggalLahir" class="form-control"
-                                        id="exampleInputPassword1" value="2000-01-01" placeholder="Tanggal Lahir">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Kelas</label>
-                                    <select name="kelas_id" class="form-control select2" style="width: 100%;">
-                                        @foreach ($kelas as $kelasItem)
-                                            <option value="{{ $kelasItem->id }}">{{ $kelasItem->namaKelas }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Jurusan</label>
-                                    <select name="jurusan" class="form-control select2" style="width: 100%;">
-                                        @foreach ($jurusan as $jurusanItem)
-                                            <option value="{{ $jurusanItem->kode }}">{{ $jurusanItem->namaJurusan }}</option>
-                                        @endforeach
-                                    </select>
+                                        id="exampleInputPassword1" placeholder="Tanggal Lahir" value="2000-01-01">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Jenis Kelamin</label>
@@ -101,11 +80,6 @@
                                     <label>Alamat</label>
                                     <input type="text" name="alamat" class="form-control" id="exampleInputPassword1"
                                         placeholder="Alamat" value="Bekasi" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Nama Wali Murid</label>
-                                    <input type="text" name="orangTua" class="form-control" id="exampleInputPassword1"
-                                        placeholder="Nama Wali Murid" value="John Doe" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Photo</label>
@@ -146,8 +120,6 @@
                     };
 
                     reader.readAsDataURL(input.files[0]);
-                }else {
-                    preview.src = "{{ asset('dist/img/pp.png') }}"; // Gambar default jika tidak ada file yang dipilih
                 }
             }
         </script>

@@ -19,10 +19,9 @@ class KelasController extends Controller
             return Datatables::of($kelas)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    // $editUrl = route('transaksi.generate-pdf', $row->id);
-                    // $deleteUrl = route('transaksi.destroy', $row->id);
-                    $editUrl = '';
-                    $deleteUrl = '';
+                    $editUrl = route('kelas.destroy', $row->id); // Ganti dengan URL edit yang sesuai
+                    $deleteUrl = route('kelas.destroy', $row->id);
+                    
                     $btn = '<div class="btn-group" role="group">';
                     $btn .= '<a href="' . $editUrl . '" class="btn btn-primary btn-block btn-user generate-pdf" data-url="' . $editUrl . '"><i class="fas fa-edit"></i></a>';
                     $btn .= '<form class="form-delete" action="' . $deleteUrl . '" method="POST" style="display:inline">
@@ -57,5 +56,13 @@ class KelasController extends Controller
         Session::flash('success', 'Data Kelas berhasil ditambahkan.'); 
         // Redirect to a specific route after successful creation
         return redirect()->route('kelas');
+    }
+    public function destroy($id)
+    {
+        $item = Kelas::findorFail($id);
+        $item->delete();
+
+        return redirect()->route('kelas');
+
     }
 }

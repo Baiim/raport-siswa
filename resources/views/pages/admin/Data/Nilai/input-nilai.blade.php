@@ -42,31 +42,36 @@
                             <div class="card-body">
                                 <input type="hidden" name="siswa_id" value="{{ $siswa->id }}">
                                 @foreach ($mapels as $item)
-                                    <div class="row mb-3">
-                                        <div class="col">
-                                            <label for="">{{ $item->mataPelajaran }}</label>
-                                            <!-- Add a hidden input field for the mapel_id -->
-                                            <input type="hidden" name="mapel_id[]" value="{{ $item->id }}">
+                                    @php
+                                        $allowedJurusan = ['STK-AK', 'STK-MM', 'STK-TKR', 'STK-TKJ'];
+                                    @endphp
+                        
+                                    @if (in_array($siswa->jurusan, $allowedJurusan) && $siswa->jurusan == $item->code)
+                                        <div class="row mb-3">
+                                            <div class="col">
+                                                <label for="">{{ $item->code }}</label>
+                                            </div>
+                                            <div class="col">
+                                                <label for="">{{ $item->mataPelajaran }}</label>
+                                                <input type="hidden" name="mapel_id[]" value="{{ $item->id }}">
+                                            </div>
+                                            <div class="col">
+                                                <input type="text" name="tugas[]" class="form-control" placeholder="Nilai Tugas">
+                                            </div>
+                                            <div class="col">
+                                                <input type="text" name="uas[]" class="form-control" placeholder="Nilai UAS">
+                                            </div>
+                                            <div class="col">
+                                                <input type="text" name="uts[]" class="form-control" placeholder="Nilai UTS">
+                                            </div>
                                         </div>
-                                        <div class="col">
-                                            <input type="text" name="tugas[]" class="form-control"
-                                                placeholder="Nilai Tugas">
-                                        </div>
-                                        <div class="col">
-                                            <input type="text" name="uas[]" class="form-control"
-                                                placeholder="Nilai UAS">
-                                        </div>
-                                        <div class="col">
-                                            <input type="text" name="uts[]" class="form-control"
-                                                placeholder="Nilai UTS">
-                                        </div>
-                                    </div>
+                                    @endif
                                 @endforeach
                                 <button type="submit" class="btn btn-primary btn-user btn-block">Simpan</button>
                             </div>
                             <!-- /.card-body -->
                         </form>
-
+                             
                     </div>
                     <!-- /.card -->
                 </div>

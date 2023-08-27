@@ -17,10 +17,9 @@ class SemesterController extends Controller
             return Datatables::of($semester)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    // $editUrl = route('transaksi.generate-pdf', $row->id);
-                    // $deleteUrl = route('transaksi.destroy', $row->id);
-                    $editUrl = '';
-                    $deleteUrl = '';
+                    $editUrl = route('tahun.destroy', $row->id); // Ganti dengan URL edit yang sesuai
+                    $deleteUrl = route('tahun.destroy', $row->id);
+                    
                     $btn = '<div class="btn-group" role="group">';
                     $btn .= '<a href="' . $editUrl . '" class="btn btn-primary btn-block btn-user generate-pdf" data-url="' . $editUrl . '"><i class="fas fa-edit"></i></a>';
                     $btn .= '<form class="form-delete" action="' . $deleteUrl . '" method="POST" style="display:inline">
@@ -59,5 +58,13 @@ class SemesterController extends Controller
         Session::flash('success', 'Data Tahun Ajaran berhasil ditambahkan.'); 
         // Redirect to a specific route after successful creation
         return redirect()->route('tahun-ajaran');
+    }
+    public function destroy($id)
+    {
+        $item = Semester::findorFail($id);
+        $item->delete();
+
+        return redirect()->route('tahun-ajaran');
+
     }
 }

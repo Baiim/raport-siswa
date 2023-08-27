@@ -13,7 +13,7 @@
                                 <h1 class="h5 mb-0 text-gray-800">Data Siswa</h1>
                                 <a href="{{ route('siswa.create') }}"
                                     class="d-none d-sm-inline-block btn btn-md btn-primary shadow-sm"><i
-                                        class="fas fa- fa-sm text-white-50"></i> Tambar Data Siswa</a>
+                                        class="fas fa- fa-sm text-white-50"></i> Tambah Data Siswa</a>
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -30,6 +30,7 @@
                                             <th>Nomor Telepon</th>
                                             <th>Wali Murid</th>
                                             <th>Kelas</th>
+                                            <th>Jurusan</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -100,6 +101,10 @@
                     {
                         data: 'kelas_id',
                         name: 'kelas_id',
+                    },
+                    {
+                        data: 'jurusan',
+                        name: 'jurusan',
                     },
                     {
                         data: 'action',

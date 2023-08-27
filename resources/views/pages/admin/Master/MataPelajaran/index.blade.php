@@ -13,7 +13,7 @@
                                 <h1 class="h5 mb-0 text-gray-800">Data Mata Pelajaran</h1>
                                 <a href="{{ route('mapel.create') }}"
                                     class="d-none d-sm-inline-block btn btn-md btn-primary shadow-sm"><i
-                                        class="fas fa- fa-sm text-white-50"></i> Tambar Data Mata Pelajaran</a>
+                                        class="fas fa- fa-sm text-white-50"></i> Tambah Data Mata Pelajaran</a>
                             </div>
                         </div>
                         <!-- /.card-header -->

@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'SMK | Data Guru')
+@section('title', 'SMK | Data Jurusan')
 @section('content')
     <!-- Begin Page Content -->
     <section class="content">
@@ -10,10 +10,10 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-sm-flex align-items-center justify-content-between mb-2">
-                                <h1 class="h5 mb-0 text-gray-800">Data Kelas</h1>
-                                <a href="{{ route('kelas.create') }}"
+                                <h1 class="h5 mb-0 text-gray-800">Data Jurusan</h1>
+                                <a href="{{ route('jurusan.create') }}"
                                     class="d-none d-sm-inline-block btn btn-md btn-primary shadow-sm"><i
-                                        class="fas fa- fa-sm text-white-50"></i> Tambah Data Kelas</a>
+                                        class="fas fa- fa-sm text-white-50"></i> Tambah Data Jurusan</a>
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -23,8 +23,8 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Kelas</th>
-                                            <th>Wali Kelas</th>
+                                            <th>Kode</th>
+                                            <th>Nama Jurusan</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -64,12 +64,12 @@
                         orderable: false,
                         searchable: false
                     }, {
-                        data: 'namaKelas',
-                        name: 'namaKelas'
+                        data: 'kode',
+                        name: 'kode'
                     },
                     {
-                        data: 'waliKelas',
-                        name: 'waliKelas'
+                        data: 'namaJurusan',
+                        name: 'namaJurusan'
                     },
                     {
                         data: 'action',

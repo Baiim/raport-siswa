@@ -3,23 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Mapel;
 use App\Models\Jurusan;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth; // Import the Auth facade
 use Illuminate\Support\Facades\Session;
 
-class MapelController extends Controller
+class JurusanController extends Controller
 {
     public function index(Request $request)
     {
-        $mapel = Mapel::query();
+        $jurusan = Jurusan::query();
         if ($request->ajax()) {
-            return Datatables::of($mapel)
+            return Datatables::of($jurusan)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $editUrl = route('mapel.destroy', $row->id); // Ganti dengan URL edit yang sesuai
-                    $deleteUrl = route('mapel.destroy', $row->id);
+                    $editUrl = route('jurusan.destroy', $row->id); // Ganti dengan URL edit yang sesuai
+                    $deleteUrl = route('jurusan.destroy', $row->id);
                     
                     $btn = '<div class="btn-group" role="group">';
                     $btn .= '<a href="' . $editUrl . '" class="btn btn-primary btn-block btn-user generate-pdf" data-url="' . $editUrl . '"><i class="fas fa-edit"></i></a>';
@@ -38,31 +37,29 @@ class MapelController extends Controller
                 ->make(true);
         }
     
-        return view('pages.admin.master.matapelajaran.index');
+        return view('pages.admin.master.jurusan.index');
     }
     public function create(){
-        $jurusan = Jurusan::all();
-        return view('pages.admin.master.matapelajaran.create', compact('jurusan'));
+        return view('pages.admin.master.jurusan.create');
     }
     public function store(Request $request)
     {
         // Buat data guru dengan menghubungkannya ke user yang telah dibuat
-        $kelas = Mapel::create([
-            'mataPelajaran' => $request->input('mataPelajaran'),
-            'code' => $request->input('code'),
-            'kkm' => $request->input('kkm'),
+        $kelas = Jurusan::create([
+            'kode' => $request->input('kode'),
+            'namaJurusan' => $request->input('namaJurusan'),
         ]);
 
-        Session::flash('success', 'Data Mapel berhasil ditambahkan.'); 
+        Session::flash('success', 'Data Jurusan berhasil ditambahkan.'); 
         // Redirect to a specific route after successful creation
-        return redirect()->route('mapel');
+        return redirect()->route('jurusan');
     }
     public function destroy($id)
     {
-        $item = Mapel::findorFail($id);
+        $item = Jurusan::findorFail($id);
         $item->delete();
 
-        return redirect()->route('mapel');
+        return redirect()->route('jurusan');
 
     }
 }
