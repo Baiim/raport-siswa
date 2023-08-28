@@ -20,7 +20,7 @@ class GuruController extends Controller
             return Datatables::of($guru)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $editUrl = route('guru.destroy', $row->id); // Ganti dengan URL edit yang sesuai
+                    $editUrl = route('guru.edit', $row->id); // Ganti dengan URL edit yang sesuai
                     $deleteUrl = route('guru.destroy', $row->id);
                     
                     $btn = '<div class="btn-group" role="group">';
@@ -61,38 +61,69 @@ class GuruController extends Controller
         $guru = Guru::create([
             'nama' => $request->input('nama'),
             'jenisKelamin' => $request->input('jenisKelamin'),
-            'tanggalLahir' => $request->input('tanggalLahir', '2000-01-01'),
+            'tanggalLahir' => $request->input('tanggalLahir'),
             'phone' => $request->input('phone'),
             'nip' => $request->input('nip'),
             'email' => $request->input('email'),
-            'alamat' => $request->input('alamat', 'Bekasi'),
+            'alamat' => $request->input('alamat'),
             'photo' => $photoPath,
             'user_id' => $user->id,
         ]);
-
+        dd($guru);
         Session::flash('success', 'Data guru dan pengguna berhasil ditambahkan.'); 
         // Redirect to a specific route after successful creation
         return redirect()->route('guru');
     }
-    public function destroy($id)
-{
-    $guru = Guru::findOrFail($id);
-
-    // Hapus foto jika ada
-    if ($guru->photo) {
-        Storage::disk('public')->delete($guru->photo);
+    public function edit($id){
+        $guru = Guru::findOrFail($id);
+        return view('pages.admin.master.guru.edit', compact('guru'));
     }
+        public function update(Request $request, $id)
+    {
+        $guru = Guru::findOrFail($id);
 
-    // Hapus user terkait
-    if ($guru->user) {
-        $guru->user->delete();
+        if ($request->hasFile('photo')) {
+            // Delete the old photo if it exists
+            if ($guru->photo) {
+                Storage::disk('public')->delete($guru->photo);
+            }
+            // Upload the new photo
+            $photoPath = $request->file('photo')->store('photos', 'public');
+            $guru->photo = $photoPath;
+        }
+
+        $guru->nama = $request->input('nama');
+        $guru->jenisKelamin = $request->input('jenisKelamin');
+        $guru->tanggalLahir = $request->input('tanggalLahir');
+        $guru->phone = $request->input('phone');
+        $guru->nip = $request->input('nip');
+        $guru->email = $request->input('email');
+        $guru->alamat = $request->input('alamat');
+        $guru->save();
+
+        Session::flash('success', 'Data guru berhasil diperbarui.'); 
+        // Redirect to a specific route after successful update
+        return redirect()->route('guru');
     }
+        public function destroy($id)
+    {
+        $guru = Guru::findOrFail($id);
 
-    $guru->delete();
+        // Hapus foto jika ada
+        if ($guru->photo) {
+            Storage::disk('public')->delete($guru->photo);
+        }
 
-    Session::flash('success', 'Data guru dan pengguna berhasil dihapus.');
+        // Hapus user terkait
+        if ($guru->user) {
+            $guru->user->delete();
+        }
 
-    // Redirect to a specific route after successful deletion
-    return redirect()->route('guru');
-}
+        $guru->delete();
+
+        Session::flash('success', 'Data guru dan pengguna berhasil dihapus.');
+
+        // Redirect to a specific route after successful deletion
+        return redirect()->route('guru');
+    }
 }   

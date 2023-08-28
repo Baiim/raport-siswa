@@ -24,7 +24,7 @@ class SiswaController extends Controller
             return Datatables::of($siswa)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $editUrl = route('siswa.destroy', $row->id); // Ganti dengan URL edit yang sesuai
+                    $editUrl = route('siswa.edit', $row->id); // Ganti dengan URL edit yang sesuai
                     $deleteUrl = route('siswa.destroy', $row->id);
                     
                     $btn = '<div class="btn-group" role="group">';
@@ -108,26 +108,73 @@ class SiswaController extends Controller
         return view('pages.admin.master.siswa.nilai', compact('siswa', 'scores'));
     }
     
-    public function destroy($id)
+        public function destroy($id)
+    {
+    $siswa = Siswa::findOrFail($id);
+
+        // Hapus foto jika ada
+        if ($siswa->photo) {
+            Storage::disk('public')->delete($siswa->photo);
+        }
+
+        // Hapus user terkait
+        if ($siswa->user) {
+        $siswa->user->delete();
+        }
+
+    $siswa->delete();
+
+        Session::flash('success', 'Data guru dan pengguna berhasil dihapus.');
+
+        // Redirect to a specific route after successful deletion
+        return redirect()->route('siswa');
+    }
+
+    public function edit($id){
+        $siswa = Siswa::findOrFail($id);
+        $kelas = Kelas::all();
+        $jurusan = Jurusan::all(); 
+        return view('pages.admin.master.siswa.edit', compact('siswa', 'kelas', 'jurusan'));
+    }
+    public function update(Request $request, $id)
 {
-   $siswa = Siswa::findOrFail($id);
+    DB::beginTransaction(); // Begin transaction
 
-    // Hapus foto jika ada
-    if ($siswa->photo) {
-        Storage::disk('public')->delete($siswa->photo);
+    try {
+        $siswa = Siswa::findOrFail($id);
+
+        if ($request->hasFile('photo')) {
+            // Delete the old photo if it exists
+            if ($siswa->photo) {
+                Storage::disk('public')->delete($siswa->photo);
+            }
+            // Upload the new photo
+            $photoPath = $request->file('photo')->store('photos', 'public');
+            $siswa->photo = $photoPath;
+        }
+
+        $siswa->nama = $request->input('nama');
+        $siswa->jenisKelamin = $request->input('jenisKelamin');
+        $siswa->tanggalLahir = $request->input('tanggalLahir');
+        $siswa->phone = $request->input('phone');
+        $siswa->nis = $request->input('nis');
+        $siswa->email = $request->input('email');
+        $siswa->alamat = $request->input('alamat');
+        $siswa->orangTua = $request->input('orangTua');
+        $siswa->kelas_id = $request->input('kelas_id');
+        $siswa->jurusan = $request->input('jurusan');
+        $siswa->save();
+
+        DB::commit(); // Save changes to the database
+
+        Session::flash('success', 'Data siswa berhasil diperbarui.'); 
+        return redirect()->route('siswa');
+    } catch (\Exception $e) {
+        DB::rollback(); // Rollback the transaction if an error occurs
+
+        Session::flash('error', 'Terjadi kesalahan saat memperbarui data siswa.');
+        return redirect()->back();
     }
-
-    // Hapus user terkait
-    if ($siswa->user) {
-       $siswa->user->delete();
-    }
-
-   $siswa->delete();
-
-    Session::flash('success', 'Data guru dan pengguna berhasil dihapus.');
-
-    // Redirect to a specific route after successful deletion
-    return redirect()->route('siswa');
 }
     
 }

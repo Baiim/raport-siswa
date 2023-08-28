@@ -18,7 +18,7 @@ class MapelController extends Controller
             return Datatables::of($mapel)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $editUrl = route('mapel.destroy', $row->id); // Ganti dengan URL edit yang sesuai
+                    $editUrl = route('mapel.edit', $row->id); // Ganti dengan URL edit yang sesuai
                     $deleteUrl = route('mapel.destroy', $row->id);
                     
                     $btn = '<div class="btn-group" role="group">';
@@ -65,4 +65,30 @@ class MapelController extends Controller
         return redirect()->route('mapel');
 
     }
+
+    public function edit($id){
+        $mapel = Mapel::findOrFail($id);
+        $jurusan = Jurusan::all(); 
+        return view('pages.admin.master.matapelajaran.edit', compact('mapel','jurusan'));
+    }
+    public function update(Request $request, $id)
+{
+    $mapel = Mapel::findOrFail($id);
+
+    try {
+        // Update the Mapel's data
+        $mapel->mataPelajaran = $request->input('mataPelajaran');
+        $mapel->code = $request->input('code');
+        $mapel->kkm = $request->input('kkm');
+        $mapel->save();
+
+        Session::flash('success', 'Data Mapel berhasil diperbarui.'); 
+        // Redirect to a specific route after successful update
+        return redirect()->route('mapel');
+    } catch (\Exception $e) {
+        Session::flash('error', 'Terjadi kesalahan saat memperbarui data Mapel.');
+        return redirect()->back();
+    }
+}
+
 }

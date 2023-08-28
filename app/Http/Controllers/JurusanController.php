@@ -17,7 +17,7 @@ class JurusanController extends Controller
             return Datatables::of($jurusan)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $editUrl = route('jurusan.destroy', $row->id); // Ganti dengan URL edit yang sesuai
+                    $editUrl = route('jurusan.edit', $row->id); // Ganti dengan URL edit yang sesuai
                     $deleteUrl = route('jurusan.destroy', $row->id);
                     
                     $btn = '<div class="btn-group" role="group">';
@@ -62,4 +62,27 @@ class JurusanController extends Controller
         return redirect()->route('jurusan');
 
     }
+    public function edit($id){
+        $jurusan = Jurusan::findOrFail($id);
+        return view('pages.admin.master.jurusan.edit', compact('jurusan'));
+    }
+    public function update(Request $request, $id)
+{
+    $jurusan = Jurusan::findOrFail($id);
+
+    try {
+        // Update the Jurusan's data
+        $jurusan->kode = $request->input('kode');
+        $jurusan->namaJurusan = $request->input('namaJurusan');
+        $jurusan->save();
+
+        Session::flash('success', 'Data Jurusan berhasil diperbarui.'); 
+        // Redirect to a specific route after successful update
+        return redirect()->route('jurusan');
+    } catch (\Exception $e) {
+        Session::flash('error', 'Terjadi kesalahan saat memperbarui data Jurusan.');
+        return redirect()->back();
+    }
+}
+
 }

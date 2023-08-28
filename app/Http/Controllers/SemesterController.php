@@ -17,7 +17,7 @@ class SemesterController extends Controller
             return Datatables::of($semester)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $editUrl = route('tahun.destroy', $row->id); // Ganti dengan URL edit yang sesuai
+                    $editUrl = route('tahun.edit', $row->id); // Ganti dengan URL edit yang sesuai
                     $deleteUrl = route('tahun.destroy', $row->id);
                     
                     $btn = '<div class="btn-group" role="group">';
@@ -67,4 +67,29 @@ class SemesterController extends Controller
         return redirect()->route('tahun-ajaran');
 
     }
+    public function edit($id){
+        $semester = Semester::findOrFail($id);
+        return view('pages.admin.master.semester.edit', compact('semester'));
+    }
+    public function update(Request $request, $id)
+{
+    $tahunAjaran = Semester::findOrFail($id);
+
+    try {
+        // Update the Tahun Ajaran's data
+        $tahunAjaran->semester = $request->input('semester');
+        $tahunAjaran->tahunAjaran = $request->input('tahunAjaran');
+        // Assuming the status is coming from the request
+        $tahunAjaran->status = 1; // Assuming status is an optional field
+        $tahunAjaran->save();
+
+        Session::flash('success', 'Data Tahun Ajaran berhasil diperbarui.'); 
+        // Redirect to a specific route after successful update
+        return redirect()->route('tahun-ajaran');
+    } catch (\Exception $e) {
+        Session::flash('error', 'Terjadi kesalahan saat memperbarui data Tahun Ajaran.');
+        return redirect()->back();
+    }
+}
+
 }

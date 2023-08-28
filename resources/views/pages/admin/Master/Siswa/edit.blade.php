@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-    SMK | Edit Data Guru
+    SMK | Edit Data Siswa
 @endsection
 @section('content')
     @push('addon-style')
@@ -21,49 +21,70 @@
                     <!-- jquery validation -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Ubah Data Guru</h3>
+                            <h3 class="card-title">Ubah Data Siswa</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
                         @if(session('error'))
-                        <div class="alert alert-danger">
-                            {{ session('error') }}
-                        </div>
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
                         @endif
                         @if(session('success'))
                             <div class="alert alert-success">
                                 {{ session('success') }}
                             </div>
                         @endif
-                        <form action="{{ route('guru.update', ['id' => $guru->id]) }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('siswa.update', ['id' => $siswa->id]) }}" method="post" enctype="multipart/form-data">
                             @method('PUT')
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Nama Guru</label>
-                                    <input type="text" name="nama" value="{{$guru->nama}}" class="form-control" id="exampleInputPassword1"
-                                        placeholder="Nama Guru" required>
+                                    <label>Nama Siswa</label>
+                                    <input type="text" name="nama" value="{{$siswa->nama}}" class="form-control" id="exampleInputPassword1"
+                                        placeholder="Nama Siswa" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>NIP</label>
-                                    <input type="number" required name="nip" value="{{$guru->nip}}" class="form-control"
-                                        id="exampleInputPassword1" placeholder="NIP">
+                                    <label>NISN</label>
+                                    <input type="number" required name="nis" value="{{$siswa->nis}}" class="form-control"
+                                        id="exampleInputPassword1" placeholder="NIS">
                                 </div>
                                 <div class="form-group">
                                     <label>Email address</label>
-                                    <input type="email" readonly name="email" value="{{$guru->email}}" class="form-control" id="exampleInputEmail1"
-                                        placeholder="Enter email" required>
+                                    <input type="email" name="email" value="{{$siswa->email}}" class="form-control" id="exampleInputEmail1"
+                                        placeholder="Enter email" readonly required>
                                 </div>
                                 <div class="form-group">
                                     <label>Nomor Telepon</label>
-                                    <input type="number" name="phone" value="{{$guru->phone}}" class="form-control" id="exampleInputPassword1"
-                                        placeholder="Nomor Telepon" required>
+                                    <input type="number" name="phone" value="{{$siswa->phone}}" class="form-control" id="exampleInputPassword1"
+                                        placeholder="Nomor Telepon" value="08123456789" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Tanggal Lahir</label>
-                                    <input type="date" required value="{{$guru->tanggalLahir}}" name="tanggalLahir" class="form-control"
-                                        id="exampleInputPassword1" placeholder="Tanggal Lahir" value="2000-01-01">
+                                    <input type="date" required name="tanggalLahir" value="{{$siswa->tanggalLahir}}" class="form-control"
+                                        id="exampleInputPassword1" value="2000-01-01" placeholder="Tanggal Lahir">
                                 </div>
+                                <div class="form-group">
+                                    <label for="">Kelas</label>
+                                    <select name="kelas_id" class="form-control select2" style="width: 100%;">
+                                        @foreach ($kelas as $kelasItem)
+                                            <option value="{{ $kelasItem->id }}" {{ $siswa->kelas_id === $kelasItem->id ? 'selected' : '' }}>
+                                                {{ $kelasItem->namaKelas }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>                                
+                                <div class="form-group">
+                                    <label for="">Jurusan</label>
+                                    <select name="jurusan" class="form-control select2" style="width: 100%;">
+                                        @foreach ($jurusan as $jurusanItem)
+                                            <option value="{{ $jurusanItem->kode }}" {{ $siswa->kelas === $jurusanItem->kode ? 'selected' : '' }}>
+                                                {{ $jurusanItem->namaJurusan }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                
                                 <div class="form-group">
                                     <label for="">Jenis Kelamin</label>
                                     <select name="jenisKelamin" class="form-control select2" style="width: 100%;">
@@ -84,14 +105,20 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Alamat</label>
-                                    <input type="text" name="alamat" value="{{$guru->alamat}}" class="form-control" id="exampleInputPassword1"
+                                    <input type="text" name="alamat" value="{{$siswa->alamat}}" class="form-control" id="exampleInputPassword1"
                                         placeholder="Alamat" value="Bekasi" required>
                                 </div>
                                 <div class="form-group">
+                                    <label>Nama Wali Murid</label>
+                                    <input type="text" name="orangTua" value="{{$siswa->orangTua}}" class="form-control" id="exampleInputPassword1"
+                                        placeholder="Nama Wali Murid" value="John Doe" required>
+                                </div>
+                                <div class="form-group">
                                     <label>Photo</label>
-                                    <input type="file" name="photo" accept="image/*" class="form-control" id="exampleInputPassword1" onchange="previewImage(event)">
+                                    <input type="file" name="photo" accept="image/*" class="form-control"
+                                        id="exampleInputPassword1" placeholder="Username" onchange="previewImage(event)">
                                     <div class="preview-container">
-                                        <img id="preview" class="preview-image" src="{{ $guru->photo ? asset($guru->photo) : asset('dist/img/pp.png') }}" alt="Preview">
+                                        <img id="preview" class="preview-image" src="{{ $siswa->photo ? asset($siswa->photo) : asset('dist/img/pp.png') }}" alt="Preview">
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">Simpan</button>
@@ -124,6 +151,8 @@
                     };
 
                     reader.readAsDataURL(input.files[0]);
+                }else {
+                    preview.src = "{{ asset('dist/img/pp.png') }}"; // Gambar default jika tidak ada file yang dipilih
                 }
             }
         </script>

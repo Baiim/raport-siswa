@@ -19,7 +19,7 @@ class KelasController extends Controller
             return Datatables::of($kelas)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $editUrl = route('kelas.destroy', $row->id); // Ganti dengan URL edit yang sesuai
+                    $editUrl = route('kelas.edit', $row->id); // Ganti dengan URL edit yang sesuai
                     $deleteUrl = route('kelas.destroy', $row->id);
                     
                     $btn = '<div class="btn-group" role="group">';
@@ -65,4 +65,28 @@ class KelasController extends Controller
         return redirect()->route('kelas');
 
     }
+    public function edit($id){
+        $kelas = Kelas::findOrFail($id);
+        $guru = Guru::all();
+        return view('pages.admin.master.kelas.edit', compact('kelas', 'guru'));
+    }
+    public function update(Request $request, $id)
+{
+    $kelas = Kelas::findOrFail($id);
+
+    try {
+        // Update the Kelas's data
+        $kelas->namaKelas = $request->input('namaKelas');
+        $kelas->waliKelas = $request->input('waliKelas');
+        $kelas->save();
+
+        Session::flash('success', 'Data Kelas berhasil diperbarui.'); 
+        // Redirect to a specific route after successful update
+        return redirect()->route('kelas');
+    } catch (\Exception $e) {
+        Session::flash('error', 'Terjadi kesalahan saat memperbarui data Kelas.');
+        return redirect()->back();
+    }
+}
+
 }
