@@ -3,10 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 28, 2023 at 11:23 AM
+-- Generation Time: Aug 28, 2023 at 12:16 PM
 -- Server version: 8.0.34
 -- PHP Version: 7.4.28
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -103,6 +104,7 @@ ALTER TABLE `gurus`
 --
 ALTER TABLE `gurus`
   ADD CONSTRAINT `gurus_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
