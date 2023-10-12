@@ -8,6 +8,8 @@ use App\Models\Siswa;
 use App\Models\User;
 use App\Models\Kelas;
 use App\Models\Guru;
+use App\Models\Semester;
+
 
 class HomeController extends Controller
 {
@@ -32,7 +34,8 @@ class HomeController extends Controller
         $guru = Guru::all()->count();
         $siswa = Siswa::all()->count();
         $user = User::all()->count();
-        return view('pages.admin.dashboard', compact('kelas','guru','siswa','user'));
+        $semesters = Semester::get();
+        return view('pages.admin.dashboard', compact('kelas','guru','siswa','user','semesters'));
     }
     public function logout()
     {

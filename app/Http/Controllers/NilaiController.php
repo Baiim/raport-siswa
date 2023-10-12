@@ -26,7 +26,6 @@ class NilaiController extends Controller
                     $btn = '<div class="btn-group" role="group">';
                     $btn .= '<a href="' . $editUrl . '" class="btn btn-primary btn-block btn-user generate-pdf"><i class="fas fa-eye"></i></a>';
                     $btn .= '</div>';
-    
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -45,6 +44,7 @@ class NilaiController extends Controller
             return Datatables::of($siswa)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
+                    
                     $scoreExists = Score::where('siswa_id', $row->id)->exists();
     
                     if ($scoreExists) {
@@ -211,4 +211,25 @@ public function update(Request $request, $siswa_id)
     // Redirect or return a response as needed
     return redirect()->route('data-nilai')->with('success', 'Scores updated successfully!');
 }
-}
+
+public function report(Request $request){
+    {
+        $kelas = Kelas::all();
+    
+        if ($request->ajax()) {
+            return Datatables::of($kelas)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $editUrl = route('data-siswa', ['kelas_id' => $row->id]);
+                    $btn = '<div class="btn-group" role="group">';
+                    $btn .= '<a href="' . $editUrl . '" class="btn btn-primary btn-block btn-user generate-pdf"><i class="fas fa-eye"></i></a>';
+                    $btn .= '</div>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    
+        return view('pages.admin.laporan.nilai.index', compact('kelas'));
+    }}}
+    

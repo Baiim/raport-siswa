@@ -10,9 +10,9 @@
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            @if (Auth::user()->level === 2 && Auth::user()->siswa)
+            @if (Auth::user()->level === 1 && Auth::user()->guru)
                 <div class="image">
-                    <img src="{{ asset('storage/' . Auth::user()->siswa->photo) }}" class="img-circle elevation-2"
+                    <img src="{{ asset('storage/' . Auth::user()->guru->photo) }}" width="10" height="10" class="img-circle elevation-2"
                         alt="User Image">
                 </div>
             @else
@@ -131,20 +131,22 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
+                            @if (Auth::user()->level === 0)
                             <li class="nav-item">
-                                <a href="pages/layout/top-nav.html" class="nav-link">
+                                <a href="{{route('guru.report')}}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Laporan Data Guru</p>
                                 </a>
                             </li>
+                            @endif
                             <li class="nav-item">
-                                <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
+                                <a href="{{route('siswa.report')}}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Laporan Data Siswa</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="pages/layout/boxed.html" class="nav-link">
+                                <a href="{{route('nilai.report')}}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Laporan Data Nilai</p>
                                 </a>

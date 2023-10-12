@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\Guru;
 use App\Models\User;
@@ -125,5 +126,23 @@ class GuruController extends Controller
 
         // Redirect to a specific route after successful deletion
         return redirect()->route('guru');
+    }
+    public function report(Request $request){
+        if ($request->ajax()) {
+            $guru = Guru::query();
+            return Datatables::of($guru)
+                ->addIndexColumn()
+                ->make(true);
+        }
+    
+        return view('pages.admin.laporan.guru.index');
+    }
+    public function pdf()
+    {
+        $guruData = Guru::all();
+    
+        $pdf = PDF::loadView('pages.admin.laporan.guru.cetak', compact('guruData'))
+            ->setPaper('a3', 'portrait'); // Set paper size to A3 and orientation to portrait
+        return $pdf->stream('data_guru.pdf');
     }
 }   

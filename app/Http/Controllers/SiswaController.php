@@ -176,5 +176,24 @@ class SiswaController extends Controller
         return redirect()->back();
     }
 }
-    
-}
+
+public function report(Request $request){
+{
+    $kelas = Kelas::all();
+
+    if ($request->ajax()) {
+        return Datatables::of($kelas)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                $editUrl = route('data-siswa', ['kelas_id' => $row->id]);
+                $btn = '<div class="btn-group" role="group">';
+                $btn .= '<a href="' . $editUrl . '" class="btn btn-primary btn-block btn-user generate-pdf"><i class="fas fa-eye"></i></a>';
+                $btn .= '</div>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    return view('pages.admin.laporan.siswa.index', compact('kelas'));
+}}}

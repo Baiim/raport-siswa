@@ -34,6 +34,8 @@ Route::post('/guru/store', [App\Http\Controllers\GuruController::class, 'store']
 Route::delete('/guru/delete/{id}', [App\Http\Controllers\GuruController::class, 'destroy'])->name('guru.destroy');
 Route::get('/guru/edit/{id}', [App\Http\Controllers\GuruController::class, 'edit'])->name('guru.edit');
 Route::put('/guru/update/{id}', [App\Http\Controllers\GuruController::class, 'update'])->name('guru.update');
+Route::get('/guru/report', [App\Http\Controllers\GuruController::class, 'report'])->name('guru.report');
+Route::get('/guru/report/pdf', [App\Http\Controllers\GuruController::class, 'pdf'])->name('guru.pdf');
 
 // Siswa
 Route::get('/siswa', [App\Http\Controllers\SiswaController::class, 'index'])->name('siswa');
@@ -42,6 +44,7 @@ Route::post('/siswa/store', [App\Http\Controllers\SiswaController::class, 'store
 Route::delete('/siswa/delete/{id}', [App\Http\Controllers\SiswaController::class, 'destroy'])->name('siswa.destroy');
 Route::get('/siswa/edit/{id}', [App\Http\Controllers\SiswaController::class, 'edit'])->name('siswa.edit');
 Route::put('/siswa/update/{id}', [App\Http\Controllers\SiswaController::class, 'update'])->name('siswa.update');
+Route::get('/siswa/report', [App\Http\Controllers\SiswaController::class, 'report'])->name('siswa.report');
 
 
 // Kelas
@@ -79,6 +82,7 @@ Route::get('/data-nilai/data-kelas/input-nilai/{siswa_id}', [App\Http\Controller
 Route::post('/data-nilai/data-kelas/input-nilai/store', [App\Http\Controllers\NilaiController::class, 'store'])->name('input-nilai.store');
 Route::get('/data-nilai/data-kelas/update-nilai/{siswa_id}', [App\Http\Controllers\NilaiController::class, 'editNilai'])->name('update-nilai');
 Route::put('/data-nilai/data-kelas/input-nilai/update/{siswa_id}', [App\Http\Controllers\NilaiController::class, 'update'])->name('update-nilai.update');
+Route::get('/nilai/report', [App\Http\Controllers\NilaiController::class, 'report'])->name('nilai.report');
 
 // Siswa
 Route::get('/siswa/nilai-siswa', [App\Http\Controllers\SiswaController::class, 'nilai'])->name('nilai-siswa');
