@@ -130,6 +130,15 @@ class GuruController extends Controller
     public function report(Request $request){
         if ($request->ajax()) {
             $guru = Guru::query();
+            $guru->select([
+                'nip',
+                'nama',
+                'jenisKelamin',
+                'phone',
+                'photo', // Nama file foto
+                // ... Kolom-kolom lain yang Anda butuhkan
+                \DB::raw('CONCAT("' . asset('/') . '", photo) as photo')
+            ]);
             return Datatables::of($guru)
                 ->addIndexColumn()
                 ->make(true);

@@ -222,4 +222,19 @@ public function pdf(Request $request, $kelas_id)
         ->setPaper('a3', 'portrait'); // Set paper size to A3 and orientation to portrait
     return $pdf->stream('data_guru.pdf');
 }
+
+public function pdfSiswa(Request $request)
+{
+    
+    $user = Auth::user(); // Get the authenticated user (siswa)
+    $siswa = $user->siswa; // Assuming the user has a relationship with Siswa model
+
+    // Retrieve the scores for the student and specific class
+    $scores = Score::where('siswa_id', $user->siswa->id)->get();
+
+
+    $pdf = PDF::loadView('pages.admin.data.nilai.cetak-raport', compact('siswa', 'scores'))
+        ->setPaper('a3', 'portrait'); // Set paper size to A3 and orientation to portrait
+    return $pdf->stream('raport.pdf');
+}
 }

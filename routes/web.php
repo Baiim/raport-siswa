@@ -86,6 +86,7 @@ Route::put('/data-nilai/data-kelas/input-nilai/update/{siswa_id}', [App\Http\Con
 Route::get('/nilai/report', [App\Http\Controllers\NilaiController::class, 'report'])->name('nilai.report');
 Route::get('/nilai/data/{kelas_id}', [App\Http\Controllers\NilaiController::class, 'data'])->name('data-nilai-siswa');
 Route::get('/nilai/report/pdf/{kelas}', [App\Http\Controllers\NilaiController::class, 'pdf'])->name('nilai.pdf');
+Route::get('/nilai/siswa/raport', [App\Http\Controllers\SiswaController::class, 'pdfSiswa'])->name('raport-siswa');
 
 // Siswa
 Route::get('/siswa/nilai-siswa', [App\Http\Controllers\SiswaController::class, 'nilai'])->name('nilai-siswa');
