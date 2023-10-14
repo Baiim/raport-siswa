@@ -27,23 +27,40 @@
     table {
       width: 100%;
       border-collapse: collapse;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     th, td {
       border: 1px solid #dddddd;
-      padding: 8px;
+      padding: 10px;
       text-align: left;
     }
     th {
       background-color: #f2f2f2;
     }
+    .header {
+      text-align: center;
+      background: #007bff;
+      color: #fff;
+      padding: 20px;
+    }
+    .logo {
+      width: 100px;
+      height: 100px;
+    }
   </style>
 </head>
 <body>
+  <!-- Header Section -->
+  <div class="header">
+    <img src="{{ asset('dist/img/logo-sekolah.png') }}" alt="School Logo" class="logo">
+    <h2>SMK DEWANTARA BEKASI</h2>
+  </div>
+
+  <!-- Content Section -->
   <div class="container">
     <h1>Daftar Guru</h1>
     <div class="school-info">
-      <p>SMK DEWANTARA BEKASI</p>
-      <p>2023/2024</p>
+      <p>Tahun Ajaran: 2023/2024</p>
     </div>
     <table>
         <thead>

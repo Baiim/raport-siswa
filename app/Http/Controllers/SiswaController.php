@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth; // Import the Auth facade
 use Illuminate\Support\Facades\Hash; 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class SiswaController extends Controller
 {
@@ -185,7 +187,7 @@ public function report(Request $request){
         return Datatables::of($kelas)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $editUrl = route('data-siswa', ['kelas_id' => $row->id]);
+                $editUrl = route('siswa-data', ['kelas_id' => $row->id]);
                 $btn = '<div class="btn-group" role="group">';
                 $btn .= '<a href="' . $editUrl . '" class="btn btn-primary btn-block btn-user generate-pdf"><i class="fas fa-eye"></i></a>';
                 $btn .= '</div>';
@@ -196,4 +198,28 @@ public function report(Request $request){
     }
 
     return view('pages.admin.laporan.siswa.index', compact('kelas'));
-}}}
+}}
+public function data(Request $request, $kelas_id)
+{
+    $kelas = Kelas::findOrFail($kelas_id);
+    $siswa = $kelas->siswa;
+
+    if ($request->ajax()) {
+        return Datatables::of($siswa)
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+    return view('pages.admin.laporan.siswa.data-siswa', compact('siswa', 'kelas'));
+}
+public function pdf(Request $request, $kelas_id)
+{
+    $kelas = Kelas::findOrFail($kelas_id);
+    $siswa = $kelas->siswa;
+
+
+    $pdf = PDF::loadView('pages.admin.laporan.siswa.cetak', compact('siswa', 'kelas'))
+        ->setPaper('a3', 'portrait'); // Set paper size to A3 and orientation to portrait
+    return $pdf->stream('data_guru.pdf');
+}
+}

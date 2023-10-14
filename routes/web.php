@@ -45,7 +45,8 @@ Route::delete('/siswa/delete/{id}', [App\Http\Controllers\SiswaController::class
 Route::get('/siswa/edit/{id}', [App\Http\Controllers\SiswaController::class, 'edit'])->name('siswa.edit');
 Route::put('/siswa/update/{id}', [App\Http\Controllers\SiswaController::class, 'update'])->name('siswa.update');
 Route::get('/siswa/report', [App\Http\Controllers\SiswaController::class, 'report'])->name('siswa.report');
-
+Route::get('/siswa/data/{kelas_id}', [App\Http\Controllers\SiswaController::class, 'data'])->name('siswa-data');
+Route::get('/siswa/report/pdf/{kelas}', [App\Http\Controllers\SiswaController::class, 'pdf'])->name('siswa.pdf');
 
 // Kelas
 Route::get('/kelas', [App\Http\Controllers\KelasController::class, 'index'])->name('kelas');
@@ -83,6 +84,8 @@ Route::post('/data-nilai/data-kelas/input-nilai/store', [App\Http\Controllers\Ni
 Route::get('/data-nilai/data-kelas/update-nilai/{siswa_id}', [App\Http\Controllers\NilaiController::class, 'editNilai'])->name('update-nilai');
 Route::put('/data-nilai/data-kelas/input-nilai/update/{siswa_id}', [App\Http\Controllers\NilaiController::class, 'update'])->name('update-nilai.update');
 Route::get('/nilai/report', [App\Http\Controllers\NilaiController::class, 'report'])->name('nilai.report');
+Route::get('/nilai/data/{kelas_id}', [App\Http\Controllers\NilaiController::class, 'data'])->name('data-nilai-siswa');
+Route::get('/nilai/report/pdf/{kelas}', [App\Http\Controllers\NilaiController::class, 'pdf'])->name('nilai.pdf');
 
 // Siswa
 Route::get('/siswa/nilai-siswa', [App\Http\Controllers\SiswaController::class, 'nilai'])->name('nilai-siswa');
